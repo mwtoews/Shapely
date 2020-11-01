@@ -4,23 +4,12 @@ platform: x64
 environment:
   COMPILER: msvc2019
   matrix:
-    # Interleave PYTHON, ARCH and GEOS_VERSION
-    - PYTHON: "C:\\Python35-x64"
-      ARCH: x64
-      GEOS_VERSION: "3.5.2"
-    - PYTHON: "C:\\Python36"
-      ARCH: x86
-      GEOS_VERSION: "3.6.4"
-    - PYTHON: "C:\\Python37-x64"
-      ARCH: x64
-      GEOS_VERSION: "3.7.3"
-    - PYTHON: "C:\\Python38"
-      ARCH: x86
-      GEOS_VERSION: "3.8.1"
     - PYTHON: "C:\\Python39-x64"
       ARCH: x64
       GEOS_VERSION: "3.8.1"
 
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 install:
   # If there is a newer build queued for the same PR, cancel this one.
@@ -48,7 +37,7 @@ build_script:
 
   - ps: 'Write-Host "Checking GEOS build $env:GEOS_INSTALL" -ForegroundColor Magenta'
   - if not exist C:\projects\deps mkdir C:\projects\deps
-  - call %APPVEYOR_BUILD_FOLDER%\ci\appveyor\build_geos.cmd
+#  - call %APPVEYOR_BUILD_FOLDER%\ci\appveyor\build_geos.cmd
 
   - ps: 'Write-Host "Checking geos_c.dll" -ForegroundColor Magenta'
   - python -c "import sys; print('Python ' + sys.version)"
